@@ -29,15 +29,6 @@ DNS Server: 127.0.0.1
 
 Setting DNS to 127.0.0.1 means the server will use itself for DNS once Active Directory is installed — this is exactly how real enterprise networks operate.
 
-Renaming the Server
-I renamed the machine to DC01 to follow proper enterprise naming conventions.
-
-DC = Domain Controller
-
-01 = first server in the environment
-
-This naming style keeps the lab organised and makes it easy to expand later with servers like DC02, WIN11-01, KALI01, SIEM01, etc.
-
 Static IP Setup (Summary)
 Opened Control Panel → Network and Sharing Center
 
