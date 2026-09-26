@@ -1,0 +1,55 @@
+Download Sysmon from Microsoft Sysinternals:
+
+Sysmon executable
+
+Sysmon64 executable
+
+Sysmon documentation
+
+Place the files in a tools directory on DC01, such as:
+
+Code
+C:\Tools\Sysmon
+Step 2 — Download the Sysmon Configuration
+Use the community‑trusted configuration maintained by SwiftOnSecurity:
+
+Reduces noise
+
+Focuses on high‑value telemetry
+
+Matches what many SOCs use in production
+
+Provides clean, structured event output
+
+Save the config as:
+
+Code
+sysmonconfig.xml
+in the same tools directory.
+
+Step 3 — Install Sysmon
+Run Sysmon with the configuration:
+
+Code
+sysmon64.exe -i sysmonconfig.xml
+You should see confirmation that Sysmon is installed and running as a service.
+
+Step 4 — Verify Sysmon Events
+Open Event Viewer →
+Applications and Services Logs →
+Microsoft →
+Windows →
+Sysmon →
+Operational
+
+You should now see events such as:
+
+Event ID 1 — Process creation
+
+Event ID 3 — Network connection
+
+Event ID 11 — File creation
+
+Event ID 13 — Registry modification
+
+This confirms Sysmon is functioning correctly.
