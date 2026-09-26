@@ -1,88 +1,48 @@
-Promoting DC01 to a Domain Controller
-1. Start the Promotion Wizard
-After installation, Server Manager shows a yellow notification.
-Click it and select:
+## Overview
+This is the step that actually creates the forest and domain, and turns DC01 from "a server with the AD DS role installed" into a real, functioning Domain Controller.
 
-“Promote this server to a domain controller”
+## Steps
 
-2. Choose “Add a new forest”
-Because this is the first Domain Controller in the environment:
+### 1. Start the Promotion Wizard
+After the AD DS role installs, Server Manager shows a notification flag. Click it and select **"Promote this server to a domain controller."**
 
-Select Add a new forest
+### 2. Choose "Add a new forest"
+Because this is the first Domain Controller in the environment, there's no existing forest to join — select **Add a new forest** and enter the root domain name: `ASLab.internal`
 
-Enter the root domain name:
+### 3. Domain Controller Options
+- Forest Functional Level: Windows Server 2016
+- Domain Functional Level: Windows Server 2016
+- DNS Server: Enabled
+- Global Catalog: Enabled
+- Read-only Domain Controller: Disabled (correct for the first DC — an RODC needs a writable DC to already exist, which isn't the case here)
 
-Code
-aydenlab.local
-3. Domain Controller Options
-The wizard will ask for:
+Windows Server 2016 is the highest functional level that exists — Microsoft hasn't introduced a newer AD functional level since, even on Server 2022 — so this isn't a downgrade, it's simply current.
 
-Forest Functional Level: Windows Server 2016
+### 4. Set the DSRM Password
+This is a Directory Services Restore Mode password — effectively a break-glass recovery credential, separate from the domain Administrator password, used only if AD needs to be repaired from a recovery boot. Worth storing safely rather than treating as a throwaway field.
 
-Domain Functional Level: Windows Server 2016
+### 5. DNS Options
+A warning about DNS delegation will likely appear here — this is expected and normal for a first DC in a new namespace, since there's no parent zone to delegate from yet. Click Next.
 
-DNS Server: Enabled
+### 6. Paths
+Left the database, log, and SYSVOL paths at their defaults — no reason to deviate for a single-DC lab.
 
-Global Catalog: Enabled
+### 7. Review Options
+The wizard summarises the configuration before committing:
+- New forest: `ASLab.internal`
+- NetBIOS name: `ASLAB`
+- DNS + Global Catalog enabled
 
-Read-only Domain Controller: Disabled (correct for first DC)
+Worth actually reading this screen rather than clicking past it — it's the last chance to catch a typo before it becomes permanent.
 
-These defaults are ideal for a homelab.
+### 8. Prerequisites Check
+The wizard runs a validation pass. Green checks and yellow warnings are normal and expected; red errors are not — those need resolving before Install becomes safe to click.
 
-4. Set the DSRM Password
-Choose a strong Directory Services Restore Mode password.
-This is used for recovery scenarios.
+### 9. Automatic Reboot
+From here the wizard handles everything: configuring AD DS, installing DNS, creating the forest and domain, promoting the server, and restarting automatically. After reboot, DC01 is officially the Domain Controller for `ASLab.internal`.
 
-5. DNS Options
-You may see a warning about DNS delegation — this is normal for a first DC.
-Click Next.
+## Logging In After Promotion
+Login now uses domain credentials: `ASLAB\Administrator`. Successfully logging in this way is the actual confirmation that the domain is live and DC01 is functioning as the identity provider — not just that the wizard reported success.
 
-6. Paths
-Leave the database, log, and SYSVOL paths at their defaults.
-
-7. Review Options
-The wizard will show a summary of your configuration:
-
-New forest: aydenlab.local
-
-NetBIOS name: AYDENLAB
-
-DNS + Global Catalog enabled
-
-Everything here should match your intended setup.
-
-8. Prerequisites Check
-The wizard will run a validation check.
-You should see:
-
-Green checks
-
-Yellow warnings (normal)
-
-No red errors
-
-Once complete, click Install.
-
-9. Automatic Reboot
-The server will:
-
-Configure AD DS
-
-Install DNS
-
-Create the forest
-
-Create the domain
-
-Promote itself
-
-Restart automatically
-
-After reboot, DC01 is officially the Domain Controller for aydenlab.local.
-
-Logging In After Promotion
-You now log in using domain credentials:
-
-Code
-AYDENLAB\Administrator
-This confirms the domain is active and DC01 is functioning as the identity provider.
+## Notes / Lessons Learned
+- The distinction between "role installed" and "promoted" matters more than it seems — a lot of AD troubleshooting guides assume you know which state a server is in, and it's easy to conflate the two as a beginner.
