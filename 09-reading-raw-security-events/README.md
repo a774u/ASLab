@@ -47,5 +47,3 @@ The XML starts with a DataItem envelope added by the agent (the time is when it 
 - **Password spraying vs brute force.** Spraying is one source failing against many different accounts with the same password, which avoids lockouts. Brute force is many passwords against one account. To spot spraying, group failures by source address and count distinct target accounts.
 - **Status `0x6` on a 4771 would mean the account does not exist.** A burst of those suggests username guessing, often the step before spraying.
 - **A raw event is the source of truth.** If a dashboard and the raw events disagree, trust the raw events.
-- **Next skill:** parse the XML into columns in KQL (`parse_xml`, `extend`, `project`) so account, source address and failure code can be filtered and counted.
-- Troubleshooting from this stage: [duplicate-security-events](../troubleshooting/duplicate-security-events.md)
